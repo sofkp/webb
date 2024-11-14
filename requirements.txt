@@ -2,3 +2,7 @@ npm install
 npm install react-icons
 npm install react-bootstrap bootstrap
 npm install styled-components     
+npm install @tanstack/react-query
+
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p

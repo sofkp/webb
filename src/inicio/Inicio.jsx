@@ -1,26 +1,78 @@
 import React, { useState } from "react";
 import * as Components from './Inicio-style.jsx';
+import { useAuth } from "../auth/Auth";
 
 function Inicio() {
   const [signIn, setSignIn] = useState(true);
+  const { login, register } = useAuth();
+  const [credentials, setCredentials] = useState({ username: "", password: "" });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setCredentials({ ...credentials, [name]: value });
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      await login(credentials);
+      alert("Logged in successfully!");
+    } catch (error) {
+      alert("Login failed");
+    }
+  };
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    try {
+      await register(credentials);
+      alert("Registered successfully!");
+    } catch (error) {
+      alert("Registration failed");
+    }
+  };
 
   return (
     <Components.Container>
       <Components.SignUpContainer signinIn={signIn}>
-        <Components.Form>
+        <Components.Form onSubmit={handleRegister}>
           <Components.Title>Regístrate</Components.Title>
-          <Components.Input type="text" placeholder="Usuario" />
-          <Components.Input type="password" placeholder="Contraseña" />
-          <Components.Button2>Registrarme</Components.Button2>
+          <Components.Input
+            type="text"
+            name="username"
+            placeholder="Usuario"
+            value={credentials.username}
+            onChange={handleInputChange}
+          />
+          <Components.Input
+            type="password"
+            name="password"
+            placeholder="Contraseña"
+            value={credentials.password}
+            onChange={handleInputChange}
+          />
+          <Components.Button2 type="submit">Registrarme</Components.Button2>
         </Components.Form>
       </Components.SignUpContainer>
 
       <Components.SignInContainer signinIn={signIn}>
-        <Components.Form>
+        <Components.Form onSubmit={handleLogin}>
           <Components.Title>Iniciar Sesión</Components.Title>
-          <Components.Input type="text" placeholder="Usuario" />
-          <Components.Input type="password" placeholder="Contraseña" />
-          <Components.Button>Iniciar Sesión</Components.Button>
+          <Components.Input
+            type="text"
+            name="username"
+            placeholder="Usuario"
+            value={credentials.username}
+            onChange={handleInputChange}
+          />
+          <Components.Input
+            type="password"
+            name="password"
+            placeholder="Contraseña"
+            value={credentials.password}
+            onChange={handleInputChange}
+          />
+          <Components.Button type="submit">Iniciar Sesión</Components.Button>
         </Components.Form>
       </Components.SignInContainer>
 
@@ -39,7 +91,7 @@ function Inicio() {
           <Components.RightOverlayPanel signinIn={signIn}>
             <Components.Title>¿No tienes cuenta?</Components.Title>
             <Components.Paragraph>
-            ¡No te preocupes! Crea una cuenta súper facil
+              ¡No te preocupes! Crea una cuenta súper fácil
             </Components.Paragraph>
             <Components.GhostButton onClick={() => setSignIn(false)}>
               Regístrate
