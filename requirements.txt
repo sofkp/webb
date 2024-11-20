@@ -5,4 +5,6 @@ npm install styled-components
 npm install @tanstack/react-query
 
 npm install -D tailwindcss postcss autoprefixer
-npx tailwindcss init -p
+npx tailwindcss init
+
+npm install react-router-dom

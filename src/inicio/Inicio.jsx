@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import * as Components from './Inicio-style.jsx';
 import { useAuth } from "../auth/Auth";
+import './inicio.css'
 
 function Inicio() {
   const [signIn, setSignIn] = useState(true);
   const { login, register } = useAuth();
-  const [credentials, setCredentials] = useState({ username: "", password: "" });
+  const [credentials, setCredentials] = useState({ user_id: "", password: "" });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -39,9 +40,9 @@ function Inicio() {
           <Components.Title>Regístrate</Components.Title>
           <Components.Input
             type="text"
-            name="username"
+            name="user_id"
             placeholder="Usuario"
-            value={credentials.username}
+            value={credentials.user_id}
             onChange={handleInputChange}
           />
           <Components.Input
@@ -60,9 +61,9 @@ function Inicio() {
           <Components.Title>Iniciar Sesión</Components.Title>
           <Components.Input
             type="text"
-            name="username"
+            name="user_id"
             placeholder="Usuario"
-            value={credentials.username}
+            value={credentials.user_id}
             onChange={handleInputChange}
           />
           <Components.Input

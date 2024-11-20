@@ -4,7 +4,7 @@ import { Navbar, Nav, NavDropdown, Form, Button, Container } from 'react-bootstr
 export const StyledNavbar = styled(Navbar)`
   background-color: #231123;
   color: #FFFCF2;
-  padding: 1rem;
+  padding: 0.3rem;
   position: fixed;
   width: 100%;
   top: 0;
@@ -25,6 +25,7 @@ export const StyledNavLink = styled(Nav.Link)`
   display: flex;
   align-items: center;
   cursor: pointer;
+  marginRight: '30px'
   
   &:hover,
   &:active {

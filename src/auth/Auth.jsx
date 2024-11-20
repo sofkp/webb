@@ -5,19 +5,24 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null); 
 
   const login = useCallback(async (credentials) => {
     try {
-      const response = await fetch('https://example.com/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(credentials),
-      });
+      const response = await fetch(
+        'https://1akh4uvyx4.execute-api.us-east-1.amazonaws.com/dev/user/login',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(credentials),
+        }
+      );
 
       if (!response.ok) throw new Error('Login failed');
 
       const data = await response.json();
       setUser(data);
+      setToken(data.token);
       setIsAuthenticated(true);
     } catch (error) {
       console.error('Login error:', error);
@@ -27,11 +32,14 @@ export const AuthProvider = ({ children }) => {
 
   const register = useCallback(async (userData) => {
     try {
-      const response = await fetch('https://example.com/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(userData),
-      });
+      const response = await fetch(
+        'https://1akh4uvyx4.execute-api.us-east-1.amazonaws.com/dev/user/register',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(userData),
+        }
+      );
 
       if (!response.ok) throw new Error('Registration failed');
 
@@ -44,8 +52,14 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
+  const logout = useCallback(() => {
+    setUser(null);
+    setToken(null);
+    setIsAuthenticated(false);
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, register }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, token, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );
