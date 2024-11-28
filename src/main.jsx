@@ -7,7 +7,7 @@ import Orders from "./ordenes/Orden";
 import Payments from "./payment/Payment";
 import Inventory from "./inventory/Inventory";
 import NewProduct from "./productos/NuevoProducto";
-import {AuthProvider} from "./auth/Auth";
+import {AuthProvider} from "./contexts/AuthContext";
 import './index.css'
 import Navbarr from './navbar/Navbar';
 import { TenantProvider, useTenant } from './contexts/TenantContext';

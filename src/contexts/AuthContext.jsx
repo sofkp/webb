@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
 const AuthContext = createContext();
 
@@ -7,10 +7,21 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null); 
 
+  useEffect(() => {
+    const storedToken = localStorage.getItem('token');
+    const storedUser = localStorage.getItem('user');
+
+    if (storedToken && storedUser) {
+      setToken(storedToken);
+      setUser(storedUser);
+      setIsAuthenticated(true);
+    }
+  }, []);
+
   const login = useCallback(async (credentials) => {
     try {
       const response = await fetch(
-        'https://vorerljnw7.execute-api.us-east-1.amazonaws.com/dev/user/login',
+        'https://8eca76beei.execute-api.us-east-1.amazonaws.com/dev/user/login',
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -24,6 +35,9 @@ export const AuthProvider = ({ children }) => {
       setUser(data);
       setToken(data.token);
       setIsAuthenticated(true);
+
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data));
     } catch (error) {
       console.error('Login error:', error);
       throw error;
@@ -33,7 +47,7 @@ export const AuthProvider = ({ children }) => {
   const register = useCallback(async (credentials) => {
     try {
       const response = await fetch(
-        'https://vorerljnw7.execute-api.us-east-1.amazonaws.com/dev/user/register',
+        'https://8eca76beei.execute-api.us-east-1.amazonaws.com/dev/user/register',
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -46,6 +60,9 @@ export const AuthProvider = ({ children }) => {
       const data = await response.json();
       setUser(data);
       setIsAuthenticated(true);
+
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data));
     } catch (error) {
       console.error('Registration error:', error);
       throw error;
@@ -56,6 +73,9 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     setToken(null);
     setIsAuthenticated(false);
+
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
   }, []);
 
   return (
