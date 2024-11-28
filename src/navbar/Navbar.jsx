@@ -8,14 +8,27 @@ import {
   StyledSearchInput
 } from './Navbar-style.jsx';
 import logo from '../assets/download.svg';
+import { useTenant } from '../contexts/TenantContext';
 
 function Navbarr() {
+  const { tenantInfo } = useTenant();
+
   return (
     <StyledNavbar expand="lg" className="fixed-top">
       <StyledContainer fluid>
-      <StyledNavbar.Brand href="#">
-          <img src={logo} alt="Logo" style={{ height: '40px' }} />
-      </StyledNavbar.Brand>
+        <StyledNavbar.Brand href="#">
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              {tenantInfo && tenantInfo.logoUrl ? (
+                <img
+                  src={tenantInfo.logoUrl}
+                  alt={`${tenantInfo.tenantId} logo`}
+                  style={{ height: '40px', marginRight: '10px' }}
+                />
+              ) : (
+                <img src={logo} alt="Default Logo" style={{ height: '40px', marginRight: '10px' }} />
+              )}
+            </div>
+        </StyledNavbar.Brand>
 
         <StyledForm>
           <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>

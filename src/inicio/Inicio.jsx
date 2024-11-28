@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import * as Components from './Inicio-style.jsx';
 import { useAuth } from "../auth/Auth";
+import { useTenant } from "../contexts/TenantContext";
 import './inicio.css'
 
 function Inicio() {
   const [signIn, setSignIn] = useState(true);
   const { login, register } = useAuth();
+  const { tenantInfo } = useTenant();
   const [credentials, setCredentials] = useState({ user_id: "", password: "" });
 
   const handleInputChange = (e) => {
@@ -37,7 +39,7 @@ function Inicio() {
     <Components.Container>
       <Components.SignUpContainer signinIn={signIn}>
         <Components.Form onSubmit={handleRegister}>
-          <Components.Title>Regístrate</Components.Title>
+          <Components.Title>Regístrate {tenantInfo && `a ${tenantInfo.tenantId}`}</Components.Title>
           <Components.Input
             type="text"
             name="user_id"
@@ -58,7 +60,7 @@ function Inicio() {
 
       <Components.SignInContainer signinIn={signIn}>
         <Components.Form onSubmit={handleLogin}>
-          <Components.Title>Iniciar Sesión</Components.Title>
+          <Components.Title>Iniciar Sesión {tenantInfo && `en ${tenantInfo.tenantId}`}</Components.Title>
           <Components.Input
             type="text"
             name="user_id"
