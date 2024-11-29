@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as Components from './Inicio-style.jsx';
 import { useAuth } from "../contexts/AuthContext.jsx";
 import { useTenant } from "../contexts/TenantContext";
@@ -10,6 +10,7 @@ function Inicio() {
   const { login, register } = useAuth();
   const { tenantInfo } = useTenant();
   const [credentials, setCredentials] = useState({ user_id: "", password: "" });
+  const [productos, setProductos] = useState([]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -36,14 +37,90 @@ function Inicio() {
     }
   };
 
+  useEffect(() => {
+    if (tenantInfo) {
+      const fetchProducts = async () => {
+        try {
+          const response = await fetch(
+            `https://3j1d1u98t7.execute-api.us-east-1.amazonaws.com/dev/inventory/names?tenant_id=${tenantInfo.tenantId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+              },
+            }
+          );
+          const data = await response.json();
+
+          console.log("Api response:", data);
+
+          if (response.ok && data.body) {
+            // Parse the body if it is a string
+          const inventories = Array.isArray(data.body) ? data.body : JSON.parse(data.body);
+
+          // Log parsed inventories
+          console.log("Parsed inventories:", inventories[0]);
+
+          if (inventories.length > 0) {
+            setProductos(inventories[0]);
+
+            const { inventory_id, tenant_id } = inventories[0];
+
+            // Fetch the details of the first inventory
+            const detailsResponse = await fetch(
+              `https://3j1d1u98t7.execute-api.us-east-1.amazonaws.com/dev/inventory/list?tenant_id=${tenant_id}&inventory_id=${inventory_id}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem("token")}`,
+                  "Content-Type": "application/json",
+                },
+              }
+            );
+            const detailsData = await detailsResponse.json();
+
+            if (detailsResponse.ok && detailsData.body) {
+              const detailedProducts = Array.isArray(detailsData.body) ? detailsData.body : JSON.parse(detailsData.body);
+
+              console.log("First inventory details:", detailedProducts);
+
+              setProductos(detailedProducts);
+            } else {
+              console.error("Failed to fetch inventory details:", detailsData.message);
+            }
+          } else {
+            console.error("No inventories found");
+          }
+        } else {
+          console.error("API response not OK or body missing");
+        }
+      } catch (error) {
+        console.error("Error fetching products:", error.message);
+      }
+    };
+
+      fetchProducts();
+    }
+  }, [tenantInfo]);
+
   return (
     <div style={{ padding: '20px' }}>
       {isAuthenticated ? (
         // Si el usuario está autenticado, mostramos los productos
         <div>
           <h1>Productos</h1>
-          <p>Estos son los productos disponibles para el usuario autenticado.</p>
-          {/* Aquí iría el código para mostrar los productos */}
+          <div>
+            {productos.length > 0 ? (
+              productos.map((producto, index) => (
+                <div key={index}>
+                  <h3>{`Producto ID: ${producto.product_id}`}</h3>
+                  <p>{`Stock: ${producto.stock}`}</p>
+                  <p>{`Observaciones: ${producto.observaciones}`}</p>
+                </div>
+              ))
+            ) : (
+              <p>Cargando productos...</p>
+            )}
+          </div>
         </div>
       ) : (
         <Components.Container>
