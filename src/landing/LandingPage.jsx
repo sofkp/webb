@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTenant } from '../contexts/TenantContext';
+import './LandingPage.css';
 
 const LandingPage = () => {
   const [tenants, setTenants] = useState([]);
@@ -37,7 +38,7 @@ const LandingPage = () => {
   return (
     <div style={{ textAlign: 'center', paddingBottom: '80px' }}>
       <h1>Selecciona tu tienda</h1>
-      <div style={{ display: 'flex', justifyContent: 'center', gap: '20px' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', flexWrap: 'wrap' }}>
         {tenants.map((tenant) => (
           <button
             key={tenant.tenant_id}
@@ -47,9 +48,26 @@ const LandingPage = () => {
               cursor: 'pointer',
               border: '1px solid #ccc',
               borderRadius: '5px',
+              background: 'transparent',
+              textAlign: 'center',
+              outline: 'none',
             }}
           >
-            <img src={tenant.logo_url} alt={`${tenant.tenant_id} logo`} width={50} />
+            <img
+              src={tenant.logo_url}
+              alt={`${tenant.tenant_id} logo`}
+              width={50}
+              style={{
+                filter: 'drop-shadow(0px 0px 6px rgba(0, 0, 0, 0.75))',
+                transition: 'filter 0.3s ease-in-out',
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.filter = 'drop-shadow(0px 0px 6px rgba(0, 0, 0, 1))';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.filter = 'drop-shadow(0px 0px 6px rgba(0, 0, 0, 0.5))';
+              }}
+            />
             <div>{tenant.tenant_id}</div>
           </button>
         ))}
