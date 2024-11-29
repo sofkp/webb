@@ -10,7 +10,28 @@ function Inicio() {
   const { login, register } = useAuth();
   const { tenantInfo } = useTenant();
   const [credentials, setCredentials] = useState({ user_id: "", password: "" });
-  const [productos, setProductos] = useState([]);
+  const [productos, setProductos] = useState([]);  
+
+  const styles = {
+    gridContainer: {
+      display: "grid",
+      gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
+      gap: "20px",
+      marginTop: "20px",
+    },
+    card: {
+      border: "1px solid #ccc",
+      borderRadius: "10px",
+      padding: "15px",
+      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+      backgroundColor: "#fff",
+      transition: "transform 0.2s ease-in-out",
+      cursor: "pointer",
+    },
+    cardHover: {
+      transform: "scale(1.05)",
+    },
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -108,10 +129,10 @@ function Inicio() {
         // Si el usuario está autenticado, mostramos los productos
         <div>
           <h1>Productos</h1>
-          <div>
+          <div style={styles.gridContainer}>
             {productos.length > 0 ? (
               productos.map((producto, index) => (
-                <div key={index}>
+                <div key={index} style={styles.card}>
                   <h3>{`Producto ID: ${producto.product_id}`}</h3>
                   <p>{`Stock: ${producto.stock}`}</p>
                   <p>{`Observaciones: ${producto.observaciones}`}</p>
