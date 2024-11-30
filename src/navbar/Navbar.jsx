@@ -65,7 +65,7 @@ function Navbarr() {
           Inventory
         </StyledNavLink>
 
-        <StyledNavLink href="/inicio">
+        <StyledNavLink href="/user">
           <FaUser size={22} style={{ marginRight: '8px' }} />
           User
         </StyledNavLink>
