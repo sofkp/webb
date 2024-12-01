@@ -14,12 +14,20 @@ const LandingPage = () => {
   const { setTenantID, setInventoryID } = useTenant();
 
   useEffect(() => {
+    document.body.classList.add('landing-page-body'); // Añade clase específica
+
+    return () => {
+      document.body.classList.remove('landing-page-body'); // Limpia al desmontar
+    };
+  }, []);
+
+
+  useEffect(() => {
     const fetchTenants = async () => {
       try {
         const response = await fetch('https://m0e5pa5e95.execute-api.us-east-1.amazonaws.com/test/customization/list-logos');
         const data = await response.json();
         if (response.ok) {
-          // No es necesario parsear de nuevo, data.body ya es un array
           setTenants(data.body);  
         } else {
           throw new Error('Failed to fetch tenants');

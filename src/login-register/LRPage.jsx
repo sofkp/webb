@@ -12,6 +12,15 @@ function Inicio() {
   const [credentials, setCredentials] = useState({ tenant_id: tenantID, user_id: "", password: "" });
   const navigate = useNavigate();
 
+  useEffect(() => {
+    document.body.classList.add('inicio-body');
+
+    return () => {
+      document.body.classList.remove('inicio-body');
+    };
+  }, []);
+
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setCredentials({ ...credentials, [name]: value });
