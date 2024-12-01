@@ -60,11 +60,6 @@ function Navbarr() {
           Payments
         </StyledNavLink>
 
-        <StyledNavLink href="/inventory">
-          <FaClipboardList size={22} style={{ marginRight: '8px' }} />
-          Inventory
-        </StyledNavLink>
-
         <StyledNavLink href="/user">
           <FaUser size={22} style={{ marginRight: '8px' }} />
           User

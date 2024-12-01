@@ -1,5 +1,197 @@
+@import url("https://fonts.googleapis.com/css?family=Montserrat:400,800");
+
 body {
-    background-color: #f9f8f2;
-    margin: 0;
-    font-family: Arial, sans-serif;
-  }  
+  margin: 0;
+  font-family: "Montserrat", sans-serif;
+  background: linear-gradient(124.14deg, rgba(255, 255, 255, 0.3) 20%, rgba(255, 255, 255, 0.5) 40%, rgba(255, 255, 255, 0.3) 60%),
+              radial-gradient(circle at 85% 30%, rgba(130, 32, 74, 0.6), rgba(221, 117, 150, 0.8)),
+              radial-gradient(circle at 35% 70%, rgba(255, 255, 255, 0.4), rgba(130, 32, 74, 0.7)),
+              linear-gradient(84.14deg, #231123 15%, #82204A 70%, #FFFFFF 100%);
+  background-color: #FFFCF2;
+}
+
+button {
+  background: transparent;
+  border: 2px transparent;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); 
+  padding: 30px 50px; 
+  border-radius: 15px; 
+  cursor: pointer;
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 18px;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  width: 200px; 
+  height: 225px; 
+}
+
+button img {
+  display: block;
+  margin: 0 auto 15px;
+  width: 75px;
+  height: auto; 
+  filter: drop-shadow(0px 0px 6px rgba(255, 255, 255, 0.7));
+  transition: filter 0.3s ease-in-out;
+}
+
+button:hover img {
+  filter: drop-shadow(0px 0px 10px rgba(255, 255, 255, 1));
+}
+
+button div {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+button:hover {
+  transform: translateY(5px);
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.4);
+  border-color: #FFFFFF;
+}
+
+h1 {
+  color: #FFFFFF;
+}
+
+.landing-page {
+  text-align: center;
+  padding-bottom: 80px;
+  position: relative;
+}
+
+.tenant-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.tenant-button {
+  padding: 20px 30px;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  background: transparent;
+  border-radius: 15px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  text-align: center;
+  font-size: 18px;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  width: 150px;
+  height: 200px;
+}
+
+.tenant-logo {
+  display: block;
+  margin: 0 auto 10px;
+  width: 80px;
+  height: auto;
+}
+
+.subpage {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 40%;
+  height: 100%;
+  background-color: rgba(35, 17, 35, 0.95);
+  box-shadow: -5px 0px 15px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  transform: translateX(100%);
+  animation: slide-in 0.5s forwards;
+  color: #FFFFFF;
+}
+
+@keyframes slide-in {
+  to {
+    transform: translateX(0);
+  }
+}
+
+.inventory-list {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  overflow-y: auto;
+  align-items: center;
+}
+
+.inventory-button {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid #FFFFFF;
+  font-size: 20px;
+  color: #FFFFFF;
+  padding: 10px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+  width: 300px;
+  height: 70px;
+}
+
+.inventory-button:hover {
+  background: rgba(255, 255, 255, 0.4);
+  transform: none; 
+}
+
+.inventory-button.selected {
+  background: rgba(255, 255, 255, 0.6); 
+  border: 2px solid #FFFFFF;
+}
+
+.inventory-button.selected:hover {
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.close-button {
+  align-self: flex-end;
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #FFFFFF;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1; 
+  width: auto;
+  height: auto;
+}
+
+/* Modify the OK button styling */
+.ok-button {
+  align-self: center;
+  padding: 8px 8px; 
+  border: none;
+  background: #82204A;
+  color: #FFFFFF;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 5px;
+  width: 120px;
+  height: 60px;
+  transition: background 0.3s ease-in-out; 
+}
+
+.ok-button:hover {
+  background: #5c1533; 
+  transform: none;
+}
+
+.subpage {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 40%;
+  height: 100%;
+  background-color: rgba(35, 17, 35, 0.95);
+  box-shadow: -5px 0px 15px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  transform: translateX(100%);
+  animation: slide-in 0.5s forwards;
+  color: #FFFFFF;
+}
