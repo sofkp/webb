@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'; 
 import { useNavigate } from 'react-router-dom';
 import { useTenant } from '../contexts/TenantContext';
 import './LandingPage.css';
@@ -18,9 +18,9 @@ const LandingPage = () => {
       try {
         const response = await fetch('https://m0e5pa5e95.execute-api.us-east-1.amazonaws.com/test/customization/list-logos');
         const data = await response.json();
-        const parsedData = typeof data.body === 'string' ? JSON.parse(data.body) : data;
         if (response.ok) {
-          setTenants(parsedData);
+          // No es necesario parsear de nuevo, data.body ya es un array
+          setTenants(data.body);  
         } else {
           throw new Error('Failed to fetch tenants');
         }
@@ -72,7 +72,7 @@ const LandingPage = () => {
     <div className="landing-page">
       <h1>Selecciona tu tienda</h1>
       <div className="tenant-container">
-        {tenants.map((tenant) => (
+        {Array.isArray(tenants) && tenants.map((tenant) => (
           <button
             key={tenant.tenant_id}
             onClick={() => handleTenantSelect(tenant.tenant_id, tenant.logo_url)}
