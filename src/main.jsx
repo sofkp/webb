@@ -13,6 +13,7 @@ import Navbarr from './navbar/Navbar';
 import { TenantProvider } from './contexts/TenantContext';
 import LandingPage from './landing/LandingPage';
 import { TokenProvider } from './contexts/TokenContext';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const MainRoutes = () => {
   const location = useLocation();
@@ -40,8 +41,11 @@ const MainRoutes = () => {
   );
 };
 
+const queryClient = new QueryClient();
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
+  <QueryClientProvider client={queryClient}>
   <React.StrictMode>
     <TenantProvider>
       <TokenProvider>
@@ -53,4 +57,5 @@ root.render(
       </TokenProvider>
     </TenantProvider>
   </React.StrictMode>
+  </QueryClientProvider>
 );
