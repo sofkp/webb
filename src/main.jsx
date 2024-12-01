@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
-import Inicio from "./inicio/Inicio";
+import Inicio from "./login-register/LRPage";
 import Products from "./productos/Productos";
 import Orders from "./ordenes/Orden";
 import Payments from "./payment/Payment";

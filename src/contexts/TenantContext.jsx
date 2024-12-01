@@ -3,15 +3,25 @@ import React, { createContext, useContext, useState } from 'react';
 const TenantContext = createContext();
 
 export const TenantProvider = ({ children }) => {
-  const [tenantInfo, setTenantInfo] = useState(null);
+  const [tenantID, setTenantID] = useState(null);
+  const [inventoryID, setInventoryID] = useState(null);
+
+  const saveTenantInfo = (tenant, inventory) => {
+    setTenantID(tenant);
+    setInventoryID(inventory);
+  };
 
   return (
-    <TenantContext.Provider value={{ tenantInfo, setTenantInfo }}>
+    <TenantContext.Provider value={{ tenantID, inventoryID, saveTenantInfo }}>
       {children}
     </TenantContext.Provider>
   );
 };
 
 export const useTenant = () => {
-  return useContext(TenantContext);
+  const context = useContext(TenantContext);
+  if (!context) {
+    throw new Error('useTenant must be used within a TenantProvider');
+  }
+  return context;
 };

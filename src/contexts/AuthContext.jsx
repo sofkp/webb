@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }) => {
   const login = useCallback(async (credentials) => {
     try {
       const response = await fetch(
-        'https://8eca76beei.execute-api.us-east-1.amazonaws.com/dev/user/login',
+        'https://0w7xbgvz6f.execute-api.us-east-1.amazonaws.com/test/user/login',
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -47,7 +47,7 @@ export const AuthProvider = ({ children }) => {
   const register = useCallback(async (credentials) => {
     try {
       const response = await fetch(
-        'https://8eca76beei.execute-api.us-east-1.amazonaws.com/dev/user/register',
+        'https://0w7xbgvz6f.execute-api.us-east-1.amazonaws.com/test/user/register',
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
