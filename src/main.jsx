@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Inicio from "./login-register/LRPage";
 import Products from "./productos/Productos";
 import Orders from "./ordenes/Orden";
@@ -10,31 +10,12 @@ import NewProduct from "./productos/NuevoProducto";
 import { AuthProvider } from "./contexts/AuthContext";
 import './index.css';
 import Navbarr from './navbar/Navbar';
-import { TenantProvider, useTenant } from './contexts/TenantContext';
+import { TenantProvider } from './contexts/TenantContext';
 import LandingPage from './landing/LandingPage';
+import { TokenProvider } from './contexts/TokenContext';
 
 const MainRoutes = () => {
-  const { setTenantInfo, tenantInfo } = useTenant();
-  const navigate = useNavigate();
   const location = useLocation();
-
-  useEffect(() => {
-    const tenant = window.location.pathname.split('/')[1];
-    const inventoryID = window.location.pathname.split('/')[2]; 
-
-    if (tenant && tenant !== tenantInfo && tenant !== 'inicio') {
-      setTenantInfo(tenant);
-    }
-
-    if (tenant && !inventoryID) {
-      navigate(`/inventory`);
-    } else if (!tenant && !tenantInfo) {
-      navigate('/');
-    } else if (tenant && inventoryID) {
-      navigate(`/inventory/${inventoryID}`);
-    }
-  }, [setTenantInfo, tenantInfo, navigate, location]);
-
  
   const showNavbar = location.pathname !== '/' && location.pathname !== '/inicio';
 
@@ -63,11 +44,13 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <TenantProvider>
-      <AuthProvider>
-        <BrowserRouter>
-          <MainRoutes />
-        </BrowserRouter>
-      </AuthProvider>
+      <TokenProvider>
+        <AuthProvider>
+          <BrowserRouter>
+            <MainRoutes />
+          </BrowserRouter>
+        </AuthProvider>
+      </TokenProvider>
     </TenantProvider>
   </React.StrictMode>
 );

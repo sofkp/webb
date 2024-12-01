@@ -3,33 +3,14 @@ import * as Components from './LRPage-style.jsx';
 import { useAuth } from "../contexts/AuthContext.jsx";
 import { useTenant } from "../contexts/TenantContext.jsx";
 import './lrpage.css'
+import { useNavigate } from "react-router-dom";
 
 function Inicio() {
-  const { tenantID, inventoryID } = useTenant();
+  const { tenantID } = useTenant();
   const [signIn, setSignIn] = useState(true);
   const { login, register } = useAuth();
   const [credentials, setCredentials] = useState({ tenant_id: tenantID, user_id: "", password: "" });
-
-  const styles = {
-    gridContainer: {
-      display: "grid",
-      gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
-      gap: "20px",
-      marginTop: "20px",
-    },
-    card: {
-      border: "1px solid #ccc",
-      borderRadius: "10px",
-      padding: "15px",
-      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-      backgroundColor: "#fff",
-      transition: "transform 0.2s ease-in-out",
-      cursor: "pointer",
-    },
-    cardHover: {
-      transform: "scale(1.05)",
-    },
-  };
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -39,12 +20,17 @@ function Inicio() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      await login(credentials);
-      alert("Logged in successfully!");
+      const response = await login(credentials);
+      if (response.statusCode === 200) {
+        alert("Logged in successfully!");
+        navigate("/products");
+      } else {
+        throw new Error("Invalid credentials");
+      }
     } catch (error) {
       alert("Login failed");
     }
-  };
+  }
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -57,11 +43,11 @@ function Inicio() {
   };
 
   return (
-    <div style={{ padding: '20px' }}>
+    <div className="inicio">
         <Components.Container>
           <Components.SignUpContainer signinIn={signIn}>
             <Components.Form onSubmit={handleRegister}>
-              <Components.Title>Regístrate {tenantInfo && `a ${tenantInfo.tenantId}`}</Components.Title>
+              <Components.Title>Regístrate {tenantID && `a ${tenantID}`}</Components.Title>
               <Components.Input
                 type="text"
                 name="user_id"
@@ -82,7 +68,7 @@ function Inicio() {
 
           <Components.SignInContainer signinIn={signIn}>
             <Components.Form onSubmit={handleLogin}>
-              <Components.Title>Iniciar Sesión {tenantInfo && `en ${tenantInfo.tenantId}`}</Components.Title>
+              <Components.Title>Iniciar Sesión {tenantID && `en ${tenantID}`}</Components.Title>
               <Components.Input
                 type="text"
                 name="user_id"

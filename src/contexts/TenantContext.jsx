@@ -4,24 +4,13 @@ const TenantContext = createContext();
 
 export const TenantProvider = ({ children }) => {
   const [tenantID, setTenantID] = useState(null);
-  const [inventoryID, setInventoryID] = useState(null);
-
-  const saveTenantInfo = (tenant, inventory) => {
-    setTenantID(tenant);
-    setInventoryID(inventory);
-  };
+  const [inventoryID, setInventoryID] = useState(null); 
 
   return (
-    <TenantContext.Provider value={{ tenantID, inventoryID, saveTenantInfo }}>
+    <TenantContext.Provider value={{ tenantID, setTenantID, inventoryID, setInventoryID }}>
       {children}
     </TenantContext.Provider>
   );
 };
 
-export const useTenant = () => {
-  const context = useContext(TenantContext);
-  if (!context) {
-    throw new Error('useTenant must be used within a TenantProvider');
-  }
-  return context;
-};
+export const useTenant = () => useContext(TenantContext);

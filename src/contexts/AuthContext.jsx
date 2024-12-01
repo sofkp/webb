@@ -1,85 +1,85 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import { useToken } from "./TokenContext";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null); 
+  const { token, setToken } = useToken(); 
 
   useEffect(() => {
-    const storedToken = localStorage.getItem('token');
-    const storedUser = localStorage.getItem('user');
+    const storedToken = localStorage.getItem("token");
+    const storedUser = localStorage.getItem("user");
 
     if (storedToken && storedUser) {
       setToken(storedToken);
-      setUser(storedUser);
+      setUser(JSON.parse(storedUser));
       setIsAuthenticated(true);
     }
-  }, []);
+  }, [setToken]);
 
   const login = useCallback(async (credentials) => {
     try {
       const response = await fetch(
-        'https://0w7xbgvz6f.execute-api.us-east-1.amazonaws.com/test/user/login',
+        "https://0w7xbgvz6f.execute-api.us-east-1.amazonaws.com/test/user/login",
         {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(credentials),
         }
       );
 
-      if (!response.ok) throw new Error('Login failed');
+      if (!response.ok) throw new Error("Login failed");
 
       const data = await response.json();
       setUser(data);
       setToken(data.token);
       setIsAuthenticated(true);
 
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data));
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data));
     } catch (error) {
-      console.error('Login error:', error);
+      console.error("Login error:", error);
       throw error;
     }
-  }, []);
+  }, [setToken]);
 
   const register = useCallback(async (credentials) => {
     try {
       const response = await fetch(
-        'https://0w7xbgvz6f.execute-api.us-east-1.amazonaws.com/test/user/register',
+        "https://0w7xbgvz6f.execute-api.us-east-1.amazonaws.com/test/user/register",
         {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(credentials),
         }
       );
 
-      if (!response.ok) throw new Error('Registration failed');
+      if (!response.ok) throw new Error("Registration failed");
 
       const data = await response.json();
       setUser(data);
       setIsAuthenticated(true);
 
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data));
+      localStorage.setItem("user", JSON.stringify(data));
     } catch (error) {
-      console.error('Registration error:', error);
+      console.error("Registration error:", error);
       throw error;
     }
-  }, []);
+  }, [setToken]);
 
   const logout = useCallback(() => {
     setUser(null);
     setToken(null);
     setIsAuthenticated(false);
 
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-  }, []);
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+  }, [setToken]);
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, token, login, register, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );
@@ -88,7 +88,7 @@ export const AuthProvider = ({ children }) => {
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };

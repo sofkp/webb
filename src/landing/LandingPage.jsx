@@ -5,13 +5,13 @@ import './LandingPage.css';
 
 const LandingPage = () => {
   const [tenants, setTenants] = useState([]);
-  const [selectedTenant, setSelectedTenant] = useState(null);
   const [inventory, setInventory] = useState([]);
-  const [isSubPageVisible, setIsSubPageVisible] = useState(false); 
+  const [selectedTenant, setSelectedTenant] = useState(null);
   const [selectedInventory, setSelectedInventory] = useState(null); 
+  const [isSubPageVisible, setIsSubPageVisible] = useState(false); 
 
   const navigate = useNavigate();
-  const { setTenantInfo, setInventoryID } = useTenant();
+  const { setTenantID, setInventoryID } = useTenant();
 
   useEffect(() => {
     const fetchTenants = async () => {
@@ -28,6 +28,7 @@ const LandingPage = () => {
         console.error('Error fetching tenants:', error);
       }
     };
+  
     fetchTenants();
   }, []);
 
@@ -48,7 +49,7 @@ const LandingPage = () => {
   };
 
   const handleTenantSelect = async (tenantId, logoUrl) => {
-    setTenantInfo({ tenantId, logoUrl });
+    setTenantID(tenantId); 
     setSelectedTenant({ tenantId, logoUrl });
     await fetchInventory(tenantId);
     setIsSubPageVisible(true);
