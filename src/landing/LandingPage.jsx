@@ -14,10 +14,9 @@ const LandingPage = () => {
   const { setTenantID, setInventoryID } = useTenant();
 
   useEffect(() => {
-    document.body.classList.add('landing-page-body'); // Añade clase específica
-
+    document.body.classList.add('landing-page-body'); 
     return () => {
-      document.body.classList.remove('landing-page-body'); // Limpia al desmontar
+      document.body.classList.remove('landing-page-body');
     };
   }, []);
 
@@ -70,11 +69,12 @@ const LandingPage = () => {
   const handleNavigateToInicio = () => {
     if (selectedInventory) {
       setInventoryID(selectedInventory);
-      navigate('/inicio');
+      navigate('/inicio', { state: { tenantID: selectedTenant.tenantId , inventoryId: selectedInventory.inventoryId} });
     } else {
       alert('Please select an inventory');
     }
   };
+
 
   return (
     <div className="landing-page">
