@@ -1,23 +1,9 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
-import { useToken } from "./TokenContext";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState(null);
-  const { token, setToken } = useToken(); 
-
-  useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    const storedUser = localStorage.getItem("user");
-
-    if (storedToken && storedUser) {
-      setToken(storedToken);
-      setUser(JSON.parse(storedUser));
-      setIsAuthenticated(true);
-    }
-  }, [setToken]);
 
   const login = useCallback(async (credentials) => {
     try {
@@ -33,19 +19,13 @@ export const AuthProvider = ({ children }) => {
       if (!response.ok) throw new Error("Login failed");
 
       const data = await response.json();
-      setUser(data);
-      setToken(data.token);
-      setIsAuthenticated(true);
+      setIsAuthenticated(false);
 
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data));
-
-      return data;
     } catch (error) {
       console.error("Login error:", error);
       throw error;
     }
-  }, [setToken]);
+  }, );
 
   const register = useCallback(async (credentials) => {
     try {
@@ -61,27 +41,20 @@ export const AuthProvider = ({ children }) => {
       if (!response.ok) throw new Error("Registration failed");
 
       const data = await response.json();
-      setUser(data);
       setIsAuthenticated(true);
 
-      localStorage.setItem("user", JSON.stringify(data));
     } catch (error) {
       console.error("Registration error:", error);
       throw error;
     }
-  }, [setToken]);
+  }, );
 
   const logout = useCallback(() => {
-    setUser(null);
-    setToken(null);
     setIsAuthenticated(false);
-
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-  }, [setToken]);
+  },);
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, register, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );
