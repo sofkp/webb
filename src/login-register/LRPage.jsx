@@ -72,19 +72,20 @@ function Inicio() {
     try {
       const response = await login(credentials);
       if (response.statusCode === 200) {
-        const token = response.data.token;
+        const token = response.token;
         setToken(token);
         navigate('/products', { state: { tenantID, inventoryID, token } });
       }
     } catch (error) {
       alert("Login failed");
+      console.log(error);
     }
   };
 
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      await register(credentials);
+      const response = await register(credentials);
       alert("Registered successfully!");
     } catch (error) {
       alert("Registration failed");
