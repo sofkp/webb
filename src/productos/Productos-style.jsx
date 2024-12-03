@@ -1,11 +1,25 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
+  position: relative;
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
-  background-color: #f9f9f9;
+  background-color: rgba(130, 32, 74, 0.3);
   border-radius: 10px;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    background-color: rgba(130, 32, 74, 0.3);
+    border-radius: inherit;
+    filter: blur(15px); 
+    z-index: -1; 
+  }
 `;
 
 export const ProductGrid = styled.div`

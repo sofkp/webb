@@ -27,7 +27,7 @@ function Navbarr() {
   return (
     <StyledNavbar expand="lg" className="fixed-top">
       <StyledContainer fluid>
-        <StyledNavbar.Brand href="#">
+        <StyledNavbar.Brand onClick={() => navigate('/products')}>
           <div style={{ display: 'flex', alignItems: 'center' }}>
             {tenantLogo ? (
               <img
@@ -62,17 +62,17 @@ function Navbarr() {
           </div>
         </StyledForm>
 
-        <StyledNavLink href="/orders">
+        <StyledNavLink onClick={() => navigate('/orders')}>
           <FaShoppingCart size={27} style={{ marginRight: '8px' }} />
           Orders
         </StyledNavLink>
 
-        <StyledNavLink href="/payments">
+        <StyledNavLink onClick={() => navigate('/payments')}>
           <FaCreditCard size={27} style={{ marginRight: '8px' }} />
           Payments
         </StyledNavLink>
 
-        <StyledNavLink href="/">
+        <StyledNavLink onClick={() => navigate('/')}>
           <IoMdExit size={27} style={{ marginRight: '8px' }} />
           Logout
         </StyledNavLink>

@@ -49,15 +49,15 @@ const Orden = () => {
   
   return (
     <Container>
-      <Title>Orders</Title>
+      <Title>Ordenes</Title>
       <OrdersContainer>
         <OrdersTable>
           <thead>
             <TableRow>
               <TableHeader>Order ID</TableHeader>
-              <TableHeader>User Info</TableHeader>
-              <TableHeader>Products</TableHeader>
-              <TableHeader>Total Price</TableHeader>
+              <TableHeader>Informaci´pn</TableHeader>
+              <TableHeader>Productos</TableHeader>
+              <TableHeader>Total</TableHeader>
               <TableHeader>Status</TableHeader>
             </TableRow>
           </thead>
@@ -71,7 +71,7 @@ const Orden = () => {
                 <TableCell>
                   {order.products.map((product, index) => (
                     <div key={index}>
-                      {product.product_id} - Quantity: {product.quantity}
+                      {product.product_id} - Cantidad: {product.quantity}
                     </div>
                   ))}
                 </TableCell>

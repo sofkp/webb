@@ -7,7 +7,7 @@ export const Container = styled.div`
 `;
 
 export const Title = styled.h1`
-  color: #82204a;
+  color: #231123;
   margin-bottom: 2rem;
   font-size: 2rem;
 `;
@@ -22,6 +22,7 @@ export const OrdersContainer = styled.div`
 export const OrdersTable = styled.table`
   width: 100%;
   border-collapse: collapse;
+  margin-top: 2rem;
 `;
 
 export const TableRow = styled.tr`

@@ -7,7 +7,7 @@ export const Container = styled.div`
 `;
 
 export const Title = styled.h1`
-  color: #82204A;
+  color: #231123;
   margin-bottom: 2rem;
   font-size: 2rem;
 `;
@@ -26,16 +26,19 @@ export const Table = styled.table`
 `;
 
 export const TableHeader = styled.th`
-  padding: 10px;
-  background-color: #f4f4f4;
   text-align: left;
-  font-weight: bold;
-  border-bottom: 2px solid #ddd;
+  padding: 1rem;
+  background-color: #82204a;
+  color: #fff;
 `;
 
-export const TableRow = styled.tr``;
+export const TableRow = styled.tr`
+&:nth-child(even) {
+  background-color: #f9f9f9;
+}
+`;
 
 export const TableCell = styled.td`
-  padding: 10px;
+  padding: 0.75rem;
   border-bottom: 1px solid #ddd;
 `;

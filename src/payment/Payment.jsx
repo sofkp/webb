@@ -23,16 +23,8 @@ const Payments = () => {
           },
         }
       );
-      if (!response.ok) {
-        throw new Error("Failed to fetch payments");
-      }
-      const result = await response.json();
-      const parsedBody =
-        typeof result.body === "string" ? JSON.parse(result.body) : result.body;
-      if (!parsedBody.payments) {
-        throw new Error("Payments not found");
-      }
-      setOrders(parsedBody.payments);
+      const data = await response.json();
+      setPayments(data.body?.orders || []);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -49,15 +41,14 @@ const Payments = () => {
 
   return (
     <Container>
-      <Title>Payments</Title>
+      <Title>Pagos</Title>
       <PaymentsContainer>
-        <div>Lista de Pagos</div>
         <Table>
           <thead>
             <TableRow>
               <TableHeader>Pago ID</TableHeader>
               <TableHeader>Fecha de Pago</TableHeader>
-              <TableHeader>Order ID</TableHeader>
+              <TableHeader>Orden ID</TableHeader>
               <TableHeader>Total</TableHeader>
               <TableHeader>Dirección de Facturación</TableHeader>
             </TableRow>
