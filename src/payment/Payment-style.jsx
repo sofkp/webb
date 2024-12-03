@@ -18,3 +18,24 @@ export const PaymentsContainer = styled.div`
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 2rem;
 `;
+
+export const Table = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 2rem;
+`;
+
+export const TableHeader = styled.th`
+  padding: 10px;
+  background-color: #f4f4f4;
+  text-align: left;
+  font-weight: bold;
+  border-bottom: 2px solid #ddd;
+`;
+
+export const TableRow = styled.tr``;
+
+export const TableCell = styled.td`
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+`;

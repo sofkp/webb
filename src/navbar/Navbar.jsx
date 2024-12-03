@@ -1,5 +1,7 @@
-import React from 'react';
-import { FaUser, FaSearch, FaShoppingCart, FaClipboardList, FaCreditCard } from 'react-icons/fa';
+import React, { useState } from 'react';
+import { FaUser, FaSearch, FaShoppingCart, FaCreditCard } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import { useTenant } from '../contexts/TenantContext.jsx';
 import {
   StyledNavbar,
   StyledNavLink,
@@ -7,52 +9,61 @@ import {
   StyledForm,
   StyledSearchInput
 } from './Navbar-style.jsx';
-import logo from '../assets/download.svg';
-import { useTenant } from '../contexts/TenantContext';
 
 function Navbarr() {
-  const { tenantInfo } = useTenant();
+  const { tenantID, tenantLogo} = useTenant();
+  const [searchInput, setSearchInput] = useState('');
+  const navigate = useNavigate();
+
+  const handleSearch = () => {
+    if (searchInput.trim()) {
+      navigate(`/product`, {
+        state: {product_name: searchInput },
+      });
+    }
+  };
 
   return (
     <StyledNavbar expand="lg" className="fixed-top">
       <StyledContainer fluid>
         <StyledNavbar.Brand href="#">
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              {tenantInfo && tenantInfo.logoUrl ? (
-                <img
-                  src={tenantInfo.logoUrl}
-                  alt={`${tenantInfo.tenantId} logo`}
-                  style={{ height: '40px', marginRight: '10px' }}
-                />
-              ) : (
-                <img src={logo} alt="Default Logo" style={{ height: '40px', marginRight: '10px' }} />
-              )}
-            </div>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            {tenantLogo ? (
+              <img
+                src={tenantLogo}
+                alt={`${tenantID} logo`}
+                style={{ height: '40px', marginRight: '10px' }}
+              />
+            ) : (
+              <img src={tenantLogo} alt={`${tenantID} logo`} style={{ height: '40px', marginRight: '10px' }} />
+            )}
+          </div>
         </StyledNavbar.Brand>
 
         <StyledForm>
           <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
             <FaSearch
-              onClick={() => window.location.href = '/products'}
+              onClick={handleSearch}
               style={{
                 position: 'absolute',
                 left: '10px',
                 cursor: 'pointer',
-                color: '#558c8c'
+                color: '#558c8c',
               }}
             />
             <StyledSearchInput
               type="search"
               placeholder="Search"
-              aria-label="Search"
-              style={{ paddingLeft: '40px' }} 
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              style={{ paddingLeft: '40px' }}
             />
           </div>
         </StyledForm>
 
         <StyledNavLink href="/orders">
-            <FaShoppingCart size={22} style={{ marginRight: '8px' }} />
-            Orders
+          <FaShoppingCart size={22} style={{ marginRight: '8px' }} />
+          Orders
         </StyledNavLink>
 
         <StyledNavLink href="/payments">
@@ -60,11 +71,10 @@ function Navbarr() {
           Payments
         </StyledNavLink>
 
-        <StyledNavLink href="/user">
+        <StyledNavLink href="/">
           <FaUser size={22} style={{ marginRight: '8px' }} />
-          User
+          Logout
         </StyledNavLink>
-
       </StyledContainer>
     </StyledNavbar>
   );

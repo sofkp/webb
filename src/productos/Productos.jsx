@@ -1,29 +1,26 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import React, { useState, useEffect, useRef } from "react";
+import { useAuth } from "../contexts/AuthContext";
+import {Container,ProductGrid,ProductCard,ProductImage,ProductInfo,ProductName,
+  ProductPrice,ProductStock,} from "./Productos-style";
+import nophoto from "../assets/no-image.svg";
+import { useToken } from "../contexts/TokenContext";
 import { useTenant } from "../contexts/TenantContext";
-import {
-  Container,
-  ProductGrid,
-  ProductCard,
-  ProductImage,
-  ProductInfo,
-  ProductName,
-  ProductPrice,
-  ProductStock,
-  LoadingMessage,
-} from "./Producto-style";
 
 const Products = () => {
   const observerTarget = useRef(null);
-  const { tenantID, inventoryID } = useTenant();
-  const [stockInfo, setStockInfo] = useState({});
+  const { tenantID } = useTenant();
+  const { inventoryID } = useAuth();
+  const { token } = useToken();
+  const [productDetails, setProductDetails] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const fetchProducts = async ({ pageParam = 1 }) => {
+  const fetchProductsInventory = async () => {
     const response = await fetch(
-      `https://8y2hkh9bpk.execute-api.us-east-1.amazonaws.com/test/product/list?tenant_id=${tenantID}`,
+      `https://23g4hzimmh.execute-api.us-east-1.amazonaws.com/prod/inventory/products/list?tenant_id=${tenantID}&inventory_id=${inventoryID}`,
       {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       }
@@ -31,103 +28,80 @@ const Products = () => {
     return response.json();
   };
 
-  const fetchStock = async (productID) => {
+  const fetchProductInfo = async (productID) => {
     try {
       const response = await fetch(
-        `https://jh8liidnxa.execute-api.us-east-1.amazonaws.com/test/inventory/product?tenant_id=${tenantID}&product_id=${productID}&inventory_id=${inventoryID}`,
+        `https://y9qjakfqzb.execute-api.us-east-1.amazonaws.com/prod/product/search?tenant_id=${tenantID}&product_id=${productID}`,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
         }
       );
       const data = await response.json();
-      return data.body?.stock || "N/A";
+      return data.body;
     } catch (error) {
-      console.error(`Error fetching stock for product ${productID}:`, error);
-      return "N/A";
+      console.error(`Error fetching details for product ${productID}:`, error);
+      return null;
     }
   };
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
-    useInfiniteQuery({
-      queryKey: ["products"],
-      queryFn: fetchProducts,
-      initialPageParam: 1,
-      getNextPageParam: (lastPage) => lastPage.nextCursor,
-    });
-
-  const handleObserver = useCallback(
-    (entries) => {
-      const [target] = entries;
-      if (target.isIntersecting && hasNextPage && !isFetchingNextPage) {
-        fetchNextPage();
-      }
-    },
-    [fetchNextPage, hasNextPage, isFetchingNextPage]
-  );
-
   useEffect(() => {
-    const element = observerTarget.current;
-    const option = { threshold: 0 };
-    const observer = new IntersectionObserver(handleObserver, option);
-    if (element) observer.observe(element);
+    const fetchProductsData = async () => {
+      setLoading(true); 
+      setError(null); 
+      try {
+        const inventoryResponse = await fetchProductsInventory();
+        const inventoryProducts = inventoryResponse.body || [];
 
-    return () => {
-      if (element) observer.unobserve(element);
-    };
-  }, [handleObserver]);
-
-  useEffect(() => {
-    if (data?.pages) {
-      const fetchAllStocks = async () => {
-        const allProducts = data.pages.flatMap((page) => page.body);
-        const stockPromises = allProducts.map(async (product) => {
-          const stock = await fetchStock(product.product_id);
-          return { id: product.product_id, stock };
+        const productInfoPromises = inventoryProducts.map(async (product) => {
+          const productDetails = await fetchProductInfo(product.product_id);
+          return {
+            ...product,
+            ...productDetails,
+          };
         });
-        const stockResults = await Promise.all(stockPromises);
-        const stockMap = stockResults.reduce(
-          (acc, { id, stock }) => ({ ...acc, [id]: stock }),
-          {}
-        );
-        setStockInfo(stockMap);
-      };
-      fetchAllStocks();
-    }
-  }, [data, tenantID, inventoryID]);
 
-  if (status === "loading") return <LoadingMessage>Cargando...</LoadingMessage>;
-  if (status === "error")
-    return <LoadingMessage>Error cargando productos</LoadingMessage>;
+        const detailedProducts = await Promise.all(productInfoPromises);
+        setProductDetails(detailedProducts.filter((item) => item !== null));
+      } catch (error) {
+        console.error("Error fetching product data:", error);
+        setError("Error al cargar los productos.");
+      } finally {
+        setLoading(false); 
+      }
+    };
+
+    fetchProductsData();
+  }, [tenantID, inventoryID, token]);
+
+  if (loading) return <div>Cargando productos...</div>;
+  if (error) return <div>{error}</div>;
+  if (productDetails.length === 0)
+    return <div>No hay productos disponibles.</div>;
 
   return (
     <Container>
       <ProductGrid>
-        {data?.pages.map((page) =>
-          page.body.map((product) => (
-            <ProductCard key={product.product_id}>
-              <ProductImage
-                src={product.image}
-                alt={product.name}
-                loading="lazy"
-              />
-              <ProductInfo>
-                <ProductName>{product.product_name}</ProductName>
-                <ProductPrice>${product.product_price}</ProductPrice>
-                <ProductStock>
-                  Stock: {stockInfo[product.product_id] || "Cargando..."}
-                </ProductStock>
-              </ProductInfo>
-            </ProductCard>
-          ))
-        )}
+        {productDetails.map((product) => (
+          <ProductCard key={product.product_id}>
+            <ProductImage
+              src={product.image || nophoto}
+              alt={product.product_name || "Producto"}
+              loading="lazy"
+            />
+            <ProductInfo>
+              <ProductName>{product.product_name || "Sin nombre"}</ProductName>
+              <ProductPrice>${product.product_price || "N/A"}</ProductPrice>
+              <ProductStock>
+                Stock: {product.stock ?? "No disponible"}
+              </ProductStock>
+            </ProductInfo>
+          </ProductCard>
+        ))}
       </ProductGrid>
       <div ref={observerTarget} style={{ height: "40px" }} />
-      {isFetchingNextPage && (
-        <LoadingMessage>Cargando más productos...</LoadingMessage>
-      )}
     </Container>
   );
 };

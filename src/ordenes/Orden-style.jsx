@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const Container = styled.div`
   max-width: 1200px;
@@ -7,7 +7,7 @@ export const Container = styled.div`
 `;
 
 export const Title = styled.h1`
-  color: #82204A;
+  color: #82204a;
   margin-bottom: 2rem;
   font-size: 2rem;
 `;
@@ -17,4 +17,27 @@ export const OrdersContainer = styled.div`
   border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 2rem;
+`;
+
+export const OrdersTable = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+`;
+
+export const TableRow = styled.tr`
+  &:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+`;
+
+export const TableHeader = styled.th`
+  text-align: left;
+  padding: 1rem;
+  background-color: #82204a;
+  color: #fff;
+`;
+
+export const TableCell = styled.td`
+  padding: 0.75rem;
+  border-bottom: 1px solid #ddd;
 `;

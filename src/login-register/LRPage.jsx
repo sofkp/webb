@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from "react";
 import * as Components from './LRPage-style.jsx';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './lrpage.css';
+import { useAuth } from "../contexts/AuthContext.jsx";
 import { useToken } from "../contexts/TokenContext.jsx";
+import { useTenant } from "../contexts/TenantContext.jsx";
+import Notification from "./Notification";
 
 function Inicio() {
-  const location = useLocation();
-  const { tenantID, inventoryID } = location.state;
   const [signIn, setSignIn] = useState(true);
+  const { setUserID } = useAuth();
+  const { tenantID } = useTenant();
   const { setToken } = useToken();
   const [credentials, setCredentials] = useState({ tenant_id: tenantID, user_id: "", password: "" });
+  const [notifications, setNotifications] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,10 +29,22 @@ function Inicio() {
     setCredentials({ ...credentials, [name]: value });
   };
 
+  const addNotification = (message, type = "success") => {
+    const id = Date.now();
+    setNotifications((prev) => [...prev, { id, message, type }]);
+    setTimeout(() => {
+      removeNotification(id);
+    }, 7000);
+  };
+
+  const removeNotification = (id) => {
+    setNotifications((prev) => prev.filter((notif) => notif.id !== id));
+  };
+
   const login = async (credentials) => {
     try {
       const response = await fetch(
-        "https://0w7xbgvz6f.execute-api.us-east-1.amazonaws.com/test/user/login",
+        "https://lxyqahts00.execute-api.us-east-1.amazonaws.com/prod/user/login",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -49,7 +65,7 @@ function Inicio() {
   const register = async (credentials) => {
     try {
       const response = await fetch(
-        "https://0w7xbgvz6f.execute-api.us-east-1.amazonaws.com/test/user/register",
+        "https://lxyqahts00.execute-api.us-east-1.amazonaws.com/prod/user/register",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -74,10 +90,11 @@ function Inicio() {
       if (response.statusCode === 200) {
         const token = response.token;
         setToken(token);
-        navigate('/products', { state: { tenantID, inventoryID, token } });
+        setUserID(credentials.user_id);
+        navigate('/products');
       }
     } catch (error) {
-      alert("Login failed");
+      addNotification("Error al iniciar sesión", "error");
       console.log(error);
     }
   };
@@ -85,15 +102,24 @@ function Inicio() {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const response = await register(credentials);
-      alert("Registered successfully!");
+      await register(credentials);
+      addNotification("Registro exitoso. Por favor, inicia sesión.", "success");
     } catch (error) {
-      alert("Registration failed");
+      addNotification("Error en el registro", "error");
     }
   };
 
   return (
     <div className="inicio">
+      {notifications.map((notif) => (
+        <Notification
+          key={notif.id}
+          message={notif.message}
+          type={notif.type}
+          onClose={() => removeNotification(notif.id)}
+        />
+      ))}
+
       <Components.Container>
         <Components.SignUpContainer signinIn={signIn}>
           <Components.Form onSubmit={handleRegister}>

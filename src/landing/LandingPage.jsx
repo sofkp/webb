@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'; 
 import { useNavigate } from 'react-router-dom';
-import { useTenant } from '../contexts/TenantContext';
 import './LandingPage.css';
+import { useAuth } from '../contexts/AuthContext';
+import { useTenant } from '../contexts/TenantContext';
 
 const LandingPage = () => {
   const [tenants, setTenants] = useState([]);
@@ -11,7 +12,8 @@ const LandingPage = () => {
   const [isSubPageVisible, setIsSubPageVisible] = useState(false); 
 
   const navigate = useNavigate();
-  const { setTenantID, setInventoryID } = useTenant();
+  const { setTenantID, setTenantLogo} = useTenant();
+  const {  setInventoryID } = useAuth();
 
   useEffect(() => {
     document.body.classList.add('landing-page-body'); 
@@ -57,6 +59,7 @@ const LandingPage = () => {
 
   const handleTenantSelect = async (tenantId, logoUrl) => {
     setTenantID(tenantId); 
+    setTenantLogo(logoUrl);
     setSelectedTenant({ tenantId, logoUrl });
     await fetchInventory(tenantId);
     setIsSubPageVisible(true);
@@ -69,7 +72,7 @@ const LandingPage = () => {
   const handleNavigateToInicio = () => {
     if (selectedInventory) {
       setInventoryID(selectedInventory);
-      navigate('/inicio', { state: { tenantID: selectedTenant.tenantId , inventoryId: selectedInventory.inventoryId} });
+      navigate('/inicio');
     } else {
       alert('Please select an inventory');
     }
@@ -94,6 +97,7 @@ const LandingPage = () => {
 
       {isSubPageVisible && (
         <div className="subpage">
+          <button className="close-button" onClick={() => setIsSubPageVisible(false)}>×</button>
           <div className="inventory-list">
             <h2>Sedes de {selectedTenant?.tenantId}</h2>
             {inventory.map((item) => (

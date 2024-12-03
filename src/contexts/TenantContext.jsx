@@ -4,10 +4,10 @@ const TenantContext = createContext();
 
 export const TenantProvider = ({ children }) => {
   const [tenantID, setTenantID] = useState(null);
-  const [inventoryID, setInventoryID] = useState(null); 
+  const [tenantLogo, setTenantLogo] = useState(null); 
 
   return (
-    <TenantContext.Provider value={{ tenantID, setTenantID, inventoryID, setInventoryID }}>
+    <TenantContext.Provider value={{ tenantID, setTenantID, tenantLogo, setTenantLogo }}>
       {children}
     </TenantContext.Provider>
   );
