@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import { useTenant } from '../contexts/TenantContext';
+import { useToken } from '../contexts/TokenContext';
 import { ProductContainer, ProductImage, ProductDetails } from './Producto-style';
 
 const ProductPage = () => {
   const location = useLocation();
-  const { token, tenantID } = useAuth();
+  const { token } = useToken();
+  const { tenantID } = useTenant();
   const { product_name } = location.state || {};
   const [product, setProduct] = useState(null);
 

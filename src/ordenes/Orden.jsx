@@ -30,7 +30,7 @@ const Orden = () => {
       const parsedBody =
         typeof result.body === "string" ? JSON.parse(result.body) : result.body;
       if (!parsedBody.orders) {
-        throw new Error("Orders not found in the response");
+        throw new Error("Orders not found");
       }
       setOrders(parsedBody.orders);
     } catch (error) {
@@ -46,8 +46,7 @@ const Orden = () => {
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
-  if (!orders || orders.length === 0) return <div>No orders available.</div>;
-
+  
   return (
     <Container>
       <Title>Orders</Title>

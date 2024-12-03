@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Container, Title, PaymentsContainer, Table, TableHeader, TableRow, TableCell } from './Payment-style';
 import { useAuth } from '../contexts/AuthContext';
 import { useTenant } from '../contexts/TenantContext';
+import { useToken } from '../contexts/TokenContext';
 
 const Payments = () => {
   const { tenantID } = useTenant();
   const { userID } = useAuth();
+  const { token } = useToken();
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -21,10 +23,18 @@ const Payments = () => {
           },
         }
       );
-      const data = await response.json();
-      setPayments(data.body?.orders || []);
+      if (!response.ok) {
+        throw new Error("Failed to fetch payments");
+      }
+      const result = await response.json();
+      const parsedBody =
+        typeof result.body === "string" ? JSON.parse(result.body) : result.body;
+      if (!parsedBody.payments) {
+        throw new Error("Payments not found");
+      }
+      setOrders(parsedBody.payments);
     } catch (error) {
-      setError("Failed to fetch payments");
+      setError(error.message);
     } finally {
       setLoading(false);
     }
@@ -32,7 +42,7 @@ const Payments = () => {
 
   useEffect(() => {
     fetchPayments();
-  }, [tenantID, userID]);
+  }, [tenantID, userID, token]);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;

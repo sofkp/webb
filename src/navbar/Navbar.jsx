@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { FaUser, FaSearch, FaShoppingCart, FaCreditCard } from 'react-icons/fa';
+import { FaSearch, FaShoppingCart, FaCreditCard } from 'react-icons/fa';
+import { IoMdExit } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
 import { useTenant } from '../contexts/TenantContext.jsx';
 import {
@@ -11,7 +12,7 @@ import {
 } from './Navbar-style.jsx';
 
 function Navbarr() {
-  const { tenantID, tenantLogo} = useTenant();
+  const { tenantID, tenantLogo } = useTenant();
   const [searchInput, setSearchInput] = useState('');
   const navigate = useNavigate();
 
@@ -32,7 +33,7 @@ function Navbarr() {
               <img
                 src={tenantLogo}
                 alt={`${tenantID} logo`}
-                style={{ height: '40px', marginRight: '10px' }}
+                style={{ height: '70px', marginRight: '10px' }}
               />
             ) : (
               <img src={tenantLogo} alt={`${tenantID} logo`} style={{ height: '40px', marginRight: '10px' }} />
@@ -41,7 +42,7 @@ function Navbarr() {
         </StyledNavbar.Brand>
 
         <StyledForm>
-          <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+          <div style={{ position: 'relative', display: 'flex', alignItems: 'center' , height:'40px', width:'750px',  size: '27px'}}>
             <FaSearch
               onClick={handleSearch}
               style={{
@@ -56,23 +57,23 @@ function Navbarr() {
               placeholder="Search"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              style={{ paddingLeft: '40px' }}
+              style={{ paddingLeft: '40px' , size: '27px'}}
             />
           </div>
         </StyledForm>
 
         <StyledNavLink href="/orders">
-          <FaShoppingCart size={22} style={{ marginRight: '8px' }} />
+          <FaShoppingCart size={27} style={{ marginRight: '8px' }} />
           Orders
         </StyledNavLink>
 
         <StyledNavLink href="/payments">
-          <FaCreditCard size={22} style={{ marginRight: '8px' }} />
+          <FaCreditCard size={27} style={{ marginRight: '8px' }} />
           Payments
         </StyledNavLink>
 
         <StyledNavLink href="/">
-          <FaUser size={22} style={{ marginRight: '8px' }} />
+          <IoMdExit size={27} style={{ marginRight: '8px' }} />
           Logout
         </StyledNavLink>
       </StyledContainer>

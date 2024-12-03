@@ -72,6 +72,7 @@ export const StyledForm = styled(Form)`
   width: 100%;
   max-width: 600px;
   margin: 0 2rem;
+  max-height: 50px;
 `;
 
 export const StyledSearchInput = styled.input`
