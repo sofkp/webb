@@ -55,7 +55,7 @@ const Orden = () => {
           <thead>
             <TableRow>
               <TableHeader>Order ID</TableHeader>
-              <TableHeader>Informaci´pn</TableHeader>
+              <TableHeader>Información</TableHeader>
               <TableHeader>Productos</TableHeader>
               <TableHeader>Total</TableHeader>
               <TableHeader>Status</TableHeader>
