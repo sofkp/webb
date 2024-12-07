@@ -23,7 +23,7 @@ const Orden = () => {
   const fetchOrders = async () => {
     try {
       const response = await fetch(
-        `https://qxtr9gpru1.execute-api.us-east-1.amazonaws.com/prod/orden/list?tenant_id=${tenantID}&user_id=${userID}`,
+        `https://xw6gmbfk59.execute-api.us-east-1.amazonaws.com/prod/orden/list?tenant_id=${tenantID}&user_id=${userID}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -54,7 +54,7 @@ const Orden = () => {
       productIDs.map(async (productID) => {
         try {
           const response = await fetch(
-            `https://zpdzsk2xof.execute-api.us-east-1.amazonaws.com/prod/product/search?tenant_id=${tenantID}&product_id=${productID}`,
+            `https://m55h5qlclj.execute-api.us-east-1.amazonaws.com/prod/product/search?tenant_id=${tenantID}&product_id=${productID}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
