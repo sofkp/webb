@@ -32,3 +32,19 @@ export const ProductDetails = styled.div`
     color: #dd7596;
   }
 `;
+
+export const CommentsContainer = styled.div`
+  margin-top: 2rem;
+  padding: 1rem;
+  background-color: #f1f1f1;
+  border-radius: 10px;
+
+  h2 {
+    color: #231123;
+  }
+
+  p {
+    margin: 0.5rem 0;
+    color: #444;
+  }
+`;

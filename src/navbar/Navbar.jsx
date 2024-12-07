@@ -10,8 +10,10 @@ import {
   StyledForm,
   StyledSearchInput
 } from './Navbar-style.jsx';
+import { useProduct } from '../contexts/ProductContext';
 
 function Navbarr() {
+  const { setProductName } = useProduct();
   const { tenantID, tenantLogo } = useTenant();
   const [searchInput, setSearchInput] = useState('');
   const navigate = useNavigate();

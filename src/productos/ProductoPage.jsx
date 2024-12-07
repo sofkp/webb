@@ -1,42 +1,76 @@
-import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { useTenant } from '../contexts/TenantContext';
-import { useToken } from '../contexts/TokenContext';
-import { ProductContainer, ProductImage, ProductDetails } from './Producto-style';
+import React, { useEffect, useState } from "react";
+import { useProduct } from "../contexts/ProductContext";
+import { useTenant } from "../contexts/TenantContext";
+import { useToken } from "../contexts/TokenContext";
+import { ProductContainer, ProductImage, ProductDetails, CommentsContainer } from "./Producto-style";
+import noImage from "../assets/no-image.svg";
 
 const ProductPage = () => {
-  const location = useLocation();
-  const { token } = useToken();
+  const { selectedProductId } = useProduct();
   const { tenantID } = useTenant();
-  const { product_name } = location.state || {};
+  const { token } = useToken();
   const [product, setProduct] = useState(null);
+  const [comments, setComments] = useState([]);
+  const [productImage, setProductImage] = useState(noImage);
 
   useEffect(() => {
-    if (tenantID && product_name) {
-      fetch(
-        `https://i2kvi0nu32.execute-api.us-east-1.amazonaws.com/prod/pago/search?tenant_id=${tenantID}&product_name=${product_name}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-        .then((response) => response.json())
-        .then((data) => setProduct(data))
-        .catch((error) => console.error('Error fetching product:', error));
-    }
-  }, [tenantID, product_name, token]);
+    const fetchProductDetails = async () => {
+      const response = await fetch(
+        `https://zpdzsk2xof.execute-api.us-east-1.amazonaws.com/prod/product/search?tenant_id=${tenantID}&product_id=${selectedProductId}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      const data = await response.json();
+      setProduct(data.body[0]);
 
-  if (!product) return <div>Loading...</div>;
+      try {
+        const imageResponse = await fetch(
+          `https://zpdzsk2xof.execute-api.us-east-1.amazonaws.com/prod/product/foto?tenant_id=${tenantID}&product_id=${selectedProductId}`
+        );
+        if (imageResponse.ok) {
+          const imageUrl = await imageResponse.text();
+          setProductImage(imageUrl || noImage);
+        }
+      } catch {
+        setProductImage(noImage);
+      }
+    };
+
+    const fetchComments = async () => {
+      const response = await fetch(
+        `https://0fhr3kss87.execute-api.us-east-1.amazonaws.com/prod/review/get?tenant_id=${tenantID}&product_id=${selectedProductId}`
+      );
+      const data = await response.json();
+      setComments(data.body);
+    };
+
+    if (selectedProductId) {
+      fetchProductDetails();
+      fetchComments();
+    }
+  }, [tenantID, token, selectedProductId]);
+
+  if (!product) return <div>Cargando...</div>;
 
   return (
     <ProductContainer>
-      <ProductImage src={product.image} alt={product.name} />
+      <ProductImage src={productImage} alt={product.product_name} />
       <ProductDetails>
-        <h1>{product.name}</h1>
-        <p>{product.description}</p>
-        <h3>${product.price}</h3>
+        <h1>{product.product_name}</h1>
+        <p>{product.product_info?.features}</p>
+        <h3>${product.product_price}</h3>
+        <p>Categoría: {product.product_info?.category}</p>
+        <p>Subcategoría: {product.product_info?.sub_category}</p>
+        <p>Fecha de lanzamiento: {product.product_info?.release_date}</p>
       </ProductDetails>
+      <CommentsContainer>
+        <h2>Comentarios</h2>
+        {comments.map((comment) => (
+          <div key={comment.review_id}>
+            <p><strong>{comment.user_id}:</strong> {comment.comentario}</p>
+            <p>Calificación: {comment.stars} estrellas</p>
+          </div>
+        ))}
+      </CommentsContainer>
     </ProductContainer>
   );
 };
