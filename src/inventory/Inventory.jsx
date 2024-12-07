@@ -12,7 +12,7 @@ const Inventory = ({tenant_id}) => {
       try {
         setLoading(true);
         const response = await fetch(
-          `https://3j1d1u98t7.execute-api.us-east-1.amazonaws.com/dev/inventory/names?tenant_id=${tenantInfo.tenantId}`,
+          `https://oi5a9j62qi.execute-api.us-east-1.amazonaws.com/prod/inventory/names?tenant_id=${tenantInfo.tenantId}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
