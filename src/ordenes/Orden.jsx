@@ -15,7 +15,11 @@ const Orden = () => {
   const fetchOrders = async () => {
     try {
       const response = await fetch(
+<<<<<<< HEAD
         `hhttps://7gd9qd08nk.execute-api.us-east-1.amazonaws.com/prod/orden/list?tenant_id=${tenantID}&user_id=${userID}`,
+=======
+        `https://gya4ovx8ib.execute-api.us-east-1.amazonaws.com/prod/orden/list?tenant_id=${tenantID}&user_id=${userID}`,
+>>>>>>> 802eb36f2e4b0e839323bb06cd5abeae26f8c3f9
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -55,7 +59,7 @@ const Orden = () => {
           <thead>
             <TableRow>
               <TableHeader>Order ID</TableHeader>
-              <TableHeader>Informaci´pn</TableHeader>
+              <TableHeader>Información</TableHeader>
               <TableHeader>Productos</TableHeader>
               <TableHeader>Total</TableHeader>
               <TableHeader>Status</TableHeader>
