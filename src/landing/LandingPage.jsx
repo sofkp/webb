@@ -26,7 +26,7 @@ const LandingPage = () => {
   useEffect(() => {
     const fetchTenants = async () => {
       try {
-        const response = await fetch('https://2kub7jpii5.execute-api.us-east-1.amazonaws.com/prod/customization/list-logos');
+        const response = await fetch('https://pukwllydl5.execute-api.us-east-1.amazonaws.com/prod/customization/list-logos');
         const data = await response.json();
         if (response.ok) {
           setTenants(data.body);  
@@ -44,7 +44,7 @@ const LandingPage = () => {
   const fetchInventory = async (tenantId) => {
     try {
       const response = await fetch(
-        `https://bdpmnvv4j4.execute-api.us-east-1.amazonaws.com/prod/inventory/names?tenant_id=${tenantId}`
+        `https://anpldhtpsd.execute-api.us-east-1.amazonaws.com/prod/inventory/names?tenant_id=${tenantId}`
       );
       const data = await response.json();
       if (response.ok) {
