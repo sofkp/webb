@@ -44,7 +44,7 @@ function Inicio() {
   const login = async (credentials) => {
     try {
       const response = await fetch(
-        "https://cdy2ifofu6.execute-api.us-east-1.amazonaws.com/prod/user/login",
+        "https://w90866t035.execute-api.us-east-1.amazonaws.com/prod/user/login",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -65,7 +65,7 @@ function Inicio() {
   const register = async (credentials) => {
     try {
       const response = await fetch(
-        "https://cdy2ifofu6.execute-api.us-east-1.amazonaws.com/prod/user/register",
+        "https://w90866t035.execute-api.us-east-1.amazonaws.com/prod/user/register",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
