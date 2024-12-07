@@ -24,7 +24,7 @@ const Productos = () => {
 
       try {
         const response = await fetch(
-          `https://zpdzsk2xof.execute-api.us-east-1.amazonaws.com/prod/product/search?tenant_id=${tenantID}&${searchParam}`,
+          `https://m55h5qlclj.execute-api.us-east-1.amazonaws.com/prod/product/search?tenant_id=${tenantID}&${searchParam}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -35,7 +35,7 @@ const Productos = () => {
         // Fetch product image
         try {
           const imageResponse = await fetch(
-            `https://zpdzsk2xof.execute-api.us-east-1.amazonaws.com/prod/product/foto?tenant_id=${tenantID}&product_id=${data.body[0]?.product_id}`
+            `https://m55h5qlclj.execute-api.us-east-1.amazonaws.com/prod/product/foto?tenant_id=${tenantID}&product_id=${data.body[0]?.product_id}`
           );
           if (imageResponse.ok) {
             const imageUrl = await imageResponse.text();
