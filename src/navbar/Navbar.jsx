@@ -13,16 +13,14 @@ import {
 import { useProduct } from '../contexts/ProductContext';
 
 function Navbarr() {
-  const { setProductName } = useProduct();
   const { tenantID, tenantLogo } = useTenant();
   const [searchInput, setSearchInput] = useState('');
   const navigate = useNavigate();
 
   const handleSearch = () => {
     if (searchInput.trim()) {
-      navigate(`/product`, {
-        state: {product_name: searchInput },
-      });
+      setproductName(searchInput); 
+      navigate(`/product`);
     }
   };
 
@@ -42,27 +40,6 @@ function Navbarr() {
             )}
           </div>
         </StyledNavbar.Brand>
-
-        <StyledForm>
-          <div style={{ position: 'relative', display: 'flex', alignItems: 'center' , height:'40px', width:'750px',  size: '27px'}}>
-            <FaSearch
-              onClick={handleSearch}
-              style={{
-                position: 'absolute',
-                left: '10px',
-                cursor: 'pointer',
-                color: '#558c8c',
-              }}
-            />
-            <StyledSearchInput
-              type="search"
-              placeholder="Search"
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              style={{ paddingLeft: '40px' , size: '27px'}}
-            />
-          </div>
-        </StyledForm>
 
         <StyledNavLink onClick={() => navigate('/orders')}>
           <FaShoppingCart size={27} style={{ marginRight: '8px' }} />

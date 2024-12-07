@@ -6,7 +6,7 @@ import { ProductContainer, ProductImage, ProductDetails, CommentsContainer } fro
 import noImage from "../assets/no-image.svg";
 
 const ProductPage = () => {
-  const { selectedProductId } = useProduct();
+  const { productID , productName} = useProduct();
   const { tenantID } = useTenant();
   const { token } = useToken();
   const [product, setProduct] = useState(null);
@@ -16,23 +16,11 @@ const ProductPage = () => {
   useEffect(() => {
     const fetchProductDetails = async () => {
       const response = await fetch(
-        `https://m55h5qlclj.execute-api.us-east-1.amazonaws.com/prod/product/search?tenant_id=${tenantID}&product_id=${selectedProductId}`,
+        `https://m55h5qlclj.execute-api.us-east-1.amazonaws.com/prod/product/search?tenant_id=${tenantID}&product_name=${productName}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       const data = await response.json();
       setProduct(data.body[0]);
-
-      try {
-        const imageResponse = await fetch(
-          `https://m55h5qlclj.execute-api.us-east-1.amazonaws.com/product/foto?tenant_id=${tenantID}&product_id=${selectedProductId}`
-        );
-        if (imageResponse.ok) {
-          const imageUrl = await imageResponse.text();
-          setProductImage(imageUrl || noImage);
-        }
-      } catch {
-        setProductImage(noImage);
-      }
     };
 
     const fetchComments = async () => {
@@ -53,7 +41,7 @@ const ProductPage = () => {
 
   return (
     <ProductContainer>
-      <ProductImage src={productImage} alt={product.product_name} />
+      <ProductImage src={noImage} />
       <ProductDetails>
         <h1>{product.product_name}</h1>
         <p>{product.product_info?.features}</p>

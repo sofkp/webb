@@ -1,72 +1,143 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useProduct } from '../contexts/ProductContext';
-import { useTenant } from '../contexts/TenantContext';
-import { useToken } from '../contexts/TokenContext';
-import { ProductContainer, ProductImage, ProductDetails } from './Producto-style';
-import noImage from "../assets/no-image.svg";
+import React, { useState, useEffect, useRef } from "react";
+import { useAuth } from "../contexts/AuthContext";
+import {Container,ProductGrid,ProductCard,ProductImage,ProductInfo,ProductName,
+  ProductPrice,ProductStock,} from "./Productos-style";
+import nophoto from "../assets/no-image.svg";
+import { useToken } from "../contexts/TokenContext";
+import { useTenant } from "../contexts/TenantContext";
 
-const Productos = () => {
-  const { productData, clearProductData } = useProduct();
-  const { token } = useToken();
+const Products = () => {
+  const observerTarget = useRef(null);
   const { tenantID } = useTenant();
-  const [product, setProduct] = useState(null);
-  const [productImage, setProductImage] = useState(noImage);
-  const navigate = useNavigate();
+  const { inventoryID } = useAuth();
+  const { token } = useToken();
+  const [productDetails, setProductDetails] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetchProductsInventory = async () => {
+    const response = await fetch(
+      `https://anpldhtpsd.execute-api.us-east-1.amazonaws.com/prod/inventory/products/list?tenant_id=${tenantID}&inventory_id=${inventoryID}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const data = await response.json();
+    return data.body;
+  };
+  
+  useEffect(() => {
+    const fetchProductsData = async () => {
+      setLoading(true); 
+      setError(null); 
+      try {
+        const inventoryProducts = await fetchProductsInventory();
+  
+        if (!Array.isArray(inventoryProducts)) {
+          throw new Error("El cuerpo de la respuesta no es un array válido.");
+        }
+  
+        const productInfoPromises = inventoryProducts.map(async (product) => {
+          const productDetails = await fetchProductInfo(product.product_id);
+          return {
+            ...product,
+            ...productDetails,
+          };
+        });
+  
+        const detailedProducts = await Promise.all(productInfoPromises);
+        setProductDetails(detailedProducts.filter((item) => item !== null));
+      } catch (error) {
+        console.error("Error fetching product data:", error);
+        setError("Error al cargar los productos.");
+      } finally {
+        setLoading(false); 
+      }
+    };
+  
+    fetchProductsData();
+  }, [tenantID, inventoryID, token]);
+  
+
+  const fetchProductInfo = async (productID) => {
+    try {
+      const response = await fetch(
+        `https://m55h5qlclj.execute-api.us-east-1.amazonaws.com/prod/product/search?tenant_id=${tenantID}&product_id=${productID}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const data = await response.json();
+      return data.body;
+    } catch (error) {
+      console.error(`Error fetching details for product ${productID}:`, error);
+      return null;
+    }
+  };
 
   useEffect(() => {
-    const fetchProduct = async () => {
-      if (!tenantID || (!productData.product_id && !productData.product_name)) return;
-
-      const searchParam = productData.product_id
-        ? `product_id=${productData.product_id}`
-        : `product_name=${productData.product_name}`;
-
+    const fetchProductsData = async () => {
+      setLoading(true); 
+      setError(null); 
       try {
-        const response = await fetch(
-          `https://m55h5qlclj.execute-api.us-east-1.amazonaws.com/prod/product/search?tenant_id=${tenantID}&${searchParam}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-        const data = await response.json();
-        setProduct(data.body[0]);
+        const inventoryResponse = await fetchProductsInventory();
+        const inventoryProducts = inventoryResponse.body || [];
 
-        // Fetch product image
-        try {
-          const imageResponse = await fetch(
-            `https://m55h5qlclj.execute-api.us-east-1.amazonaws.com/prod/product/foto?tenant_id=${tenantID}&product_id=${data.body[0]?.product_id}`
-          );
-          if (imageResponse.ok) {
-            const imageUrl = await imageResponse.text();
-            setProductImage(imageUrl || noImage);
-          }
-        } catch {
-          setProductImage(noImage);
-        }
+        const productInfoPromises = inventoryProducts.map(async (product) => {
+          const productDetails = await fetchProductInfo(product.product_id);
+          return {
+            ...product,
+            ...productDetails,
+          };
+        });
+
+        const detailedProducts = await Promise.all(productInfoPromises);
+        setProductDetails(detailedProducts.filter((item) => item !== null));
       } catch (error) {
-        console.error('Error fetching product:', error);
+        console.error("Error fetching product data:", error);
+        setError("Error al cargar los productos.");
+      } finally {
+        setLoading(false); 
       }
     };
 
-    fetchProduct();
+    fetchProductsData();
+  }, [tenantID, inventoryID, token]);
 
-    return () => clearProductData();
-  }, [tenantID, productData, token, clearProductData]);
-
-  if (!product) return <div>Cargando producto...</div>;
+  if (loading) return <div>Cargando productos...</div>;
+  if (error) return <div>{error}</div>;
+  if (productDetails.length === 0)
+    return <div>No hay productos disponibles.</div>;
 
   return (
-    <ProductContainer>
-      <ProductImage src={productImage} alt={product.product_name} />
-      <ProductDetails>
-        <h1>{product.product_name}</h1>
-        <p>{product.product_info.features}</p>
-        <h3>${product.product_price}</h3>
-        <p>Categoría: {product.product_info.category}</p>
-      </ProductDetails>
-    </ProductContainer>
+    <Container>
+      <ProductGrid>
+        {productDetails.map((product) => (
+          <ProductCard key={product.product_id}>
+            <ProductImage
+              src={product.image || nophoto}
+              alt={product.product_name || "Producto"}
+              loading="lazy"
+            />
+            <ProductInfo>
+              <ProductName>{product.product_name || "Sin nombre"}</ProductName>
+              <ProductPrice>${product.product_price || "N/A"}</ProductPrice>
+              <ProductStock>
+                Stock: {product.stock ?? "No disponible"}
+              </ProductStock>
+            </ProductInfo>
+          </ProductCard>
+        ))}
+      </ProductGrid>
+      <div ref={observerTarget} style={{ height: "40px" }} />
+    </Container>
   );
 };
 
-export default Productos;
+export default Products;
