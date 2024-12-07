@@ -16,7 +16,7 @@ const ProductPage = () => {
   useEffect(() => {
     const fetchProductDetails = async () => {
       const response = await fetch(
-        `https://zpdzsk2xof.execute-api.us-east-1.amazonaws.com/prod/product/search?tenant_id=${tenantID}&product_id=${selectedProductId}`,
+        `https://m55h5qlclj.execute-api.us-east-1.amazonaws.com/prod/product/search?tenant_id=${tenantID}&product_id=${selectedProductId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       const data = await response.json();
@@ -24,7 +24,7 @@ const ProductPage = () => {
 
       try {
         const imageResponse = await fetch(
-          `https://zpdzsk2xof.execute-api.us-east-1.amazonaws.com/prod/product/foto?tenant_id=${tenantID}&product_id=${selectedProductId}`
+          `https://m55h5qlclj.execute-api.us-east-1.amazonaws.com/product/foto?tenant_id=${tenantID}&product_id=${selectedProductId}`
         );
         if (imageResponse.ok) {
           const imageUrl = await imageResponse.text();
