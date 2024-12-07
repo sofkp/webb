@@ -14,7 +14,7 @@ const ProductPage = () => {
   useEffect(() => {
     if (tenantID && product_name) {
       fetch(
-        `https://xmxi7c9g76.execute-api.us-east-1.amazonaws.com/prod/product/search?tenant_id=${tenantID}&product_name=${product_name}`,
+        `https://i2kvi0nu32.execute-api.us-east-1.amazonaws.com/prod/pago/search?tenant_id=${tenantID}&product_name=${product_name}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

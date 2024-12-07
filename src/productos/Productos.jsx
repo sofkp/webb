@@ -25,8 +25,42 @@ const Products = () => {
         },
       }
     );
-    return response.json();
+    const data = await response.json();
+    return data.body; // Regresa directamente el cuerpo de la respuesta
   };
+  
+  useEffect(() => {
+    const fetchProductsData = async () => {
+      setLoading(true); 
+      setError(null); 
+      try {
+        const inventoryProducts = await fetchProductsInventory();
+  
+        if (!Array.isArray(inventoryProducts)) {
+          throw new Error("El cuerpo de la respuesta no es un array válido.");
+        }
+  
+        const productInfoPromises = inventoryProducts.map(async (product) => {
+          const productDetails = await fetchProductInfo(product.product_id);
+          return {
+            ...product,
+            ...productDetails,
+          };
+        });
+  
+        const detailedProducts = await Promise.all(productInfoPromises);
+        setProductDetails(detailedProducts.filter((item) => item !== null));
+      } catch (error) {
+        console.error("Error fetching product data:", error);
+        setError("Error al cargar los productos.");
+      } finally {
+        setLoading(false); 
+      }
+    };
+  
+    fetchProductsData();
+  }, [tenantID, inventoryID, token]);
+  
 
   const fetchProductInfo = async (productID) => {
     try {
