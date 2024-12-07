@@ -17,11 +17,7 @@ const Products = () => {
 
   const fetchProductsInventory = async () => {
     const response = await fetch(
-<<<<<<< HEAD
       `https://lzd8yyhab1.execute-api.us-east-1.amazonaws.com/prod/inventory/products/list?tenant_id=${tenantID}&inventory_id=${inventoryID}`,
-=======
-      `https://oi5a9j62qi.execute-api.us-east-1.amazonaws.com/prod/inventory/products/list?tenant_id=${tenantID}&inventory_id=${inventoryID}`,
->>>>>>> 802eb36f2e4b0e839323bb06cd5abeae26f8c3f9
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -35,11 +31,7 @@ const Products = () => {
   const fetchProductInfo = async (productID) => {
     try {
       const response = await fetch(
-<<<<<<< HEAD
         `https://xmxi7c9g76.execute-api.us-east-1.amazonaws.com/prod/product/search?tenant_id=${tenantID}&product_id=${productID}`,
-=======
-        `https://j7k35njq6j.execute-api.us-east-1.amazonaws.com/prod/product/search?tenant_id=${tenantID}&product_id=${productID}`,
->>>>>>> 802eb36f2e4b0e839323bb06cd5abeae26f8c3f9
         {
           headers: {
             Authorization: `Bearer ${token}`,

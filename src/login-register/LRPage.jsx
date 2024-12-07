@@ -44,11 +44,7 @@ function Inicio() {
   const login = async (credentials) => {
     try {
       const response = await fetch(
-<<<<<<< HEAD
         "https://bfh1meojk2.execute-api.us-east-1.amazonaws.com/prod/user/login",
-=======
-        "https://i1w2t4axo8.execute-api.us-east-1.amazonaws.com/prod/user/login",
->>>>>>> 802eb36f2e4b0e839323bb06cd5abeae26f8c3f9
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -69,11 +65,7 @@ function Inicio() {
   const register = async (credentials) => {
     try {
       const response = await fetch(
-<<<<<<< HEAD
         "https://bfh1meojk2.execute-api.us-east-1.amazonaws.com/prod/user/register",
-=======
-        "https://i1w2t4axo8.execute-api.us-east-1.amazonaws.com/prod/user/register",
->>>>>>> 802eb36f2e4b0e839323bb06cd5abeae26f8c3f9
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
