@@ -15,7 +15,7 @@ const Payments = () => {
   const fetchPayments = async () => {
     try {
       const response = await fetch(
-        `https://4q2d5wu971.execute-api.us-east-1.amazonaws.com/prod/pago/list?user_id=${userID}&tenant_id=${tenantID}`,
+        `https://yhd3dw4yf2.execute-api.us-east-1.amazonaws.com/prod/pago/list?user_id=${userID}&tenant_id=${tenantID}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
