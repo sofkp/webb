@@ -15,7 +15,7 @@ const Orden = () => {
   const fetchOrders = async () => {
     try {
       const response = await fetch(
-        `https://p1pox30s9a.execute-api.us-east-1.amazonaws.com/prod/orden/list?tenant_id=${tenantID}&user_id=${userID}`,
+        `hhttps://7gd9qd08nk.execute-api.us-east-1.amazonaws.com/prod/orden/list?tenant_id=${tenantID}&user_id=${userID}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
