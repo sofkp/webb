@@ -23,7 +23,7 @@ const Comentarios = () => {
     const fetchReviews = async () => {
         try {
             const response = await fetch(
-                `https://tq7rtyn1bg.execute-api.us-east-1.amazonaws.com/prod/review/list?tenant_id=${tenantID}&user_id=${userID}`,
+                `https://35l07upneb.execute-api.us-east-1.amazonaws.com/prod/review/list?tenant_id=${tenantID}&user_id=${userID}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
